@@ -3,8 +3,8 @@ package com.civic.sip.model;
 public class UserDataRecord {
     private String label;
     private String value;
-    private Boolean valid;
-    private Boolean owner;
+    private Boolean isValid;
+    private Boolean isOwner;
 
     public String getLabel() {
         return label;
@@ -24,21 +24,21 @@ public class UserDataRecord {
         return this;
     }
 
-    public Boolean getValid() {
-        return valid;
+    public Boolean getIsValid() {
+        return isValid;
     }
 
-    public UserDataRecord setValid(Boolean valid) {
-        this.valid = valid;
+    public UserDataRecord setIsValid(Boolean isValid) {
+        this.isValid = isValid;
         return this;
     }
 
-    public Boolean getOwner() {
-        return owner;
+    public Boolean getIsOwner() {
+        return isOwner;
     }
 
-    public UserDataRecord setOwner(Boolean owner) {
-        this.owner = owner;
+    public UserDataRecord setIsOwner(Boolean isOwner) {
+        this.isOwner = isOwner;
         return this;
     }
 }

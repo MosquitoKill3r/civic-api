@@ -119,7 +119,6 @@ public class CivicSip {
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("alg", "ES256");
-//        headers.put("typ", "JWT");
         JwtBuilder builder = Jwts.builder();
         builder
                 .setHeader(headers)
