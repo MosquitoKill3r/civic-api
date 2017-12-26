@@ -1,4 +1,4 @@
-group 'civic'
+group 'civic-api'
 version '0.0.1'
 
 apply plugin: 'java'
