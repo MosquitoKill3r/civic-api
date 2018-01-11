@@ -8,6 +8,8 @@ Please see [docs.civic.com](https://docs.civic.com) for a more details.
 ### Installation
 * You must have **Gradle** installed in order to build this project
 * You can check [Demo Web Application](https://github.com/MosquitoKill3r/civic-api-web-demo) for configuration, installation and usage.
+* To build project run `gradle clean build` from command line.
+* To run unit test execute `gradle test` from command line.
 
 ### Usage
 - Register your application on [Civic Partner Portal](https://sip-partners.civic.com).
