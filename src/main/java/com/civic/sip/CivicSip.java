@@ -68,7 +68,7 @@ public class CivicSip {
         String auth = makeAuthorizationHeader(body);
 
 
-        HttpClient client = HttpClientBuilder.create().build();
+        HttpClient client = createHttpClient();
         HttpPost post = new HttpPost(BASE_URL + "/" + config.getEnvironment() + "/" + AUTH_PATH);
 
         post.addHeader("Authorization", auth);
@@ -91,13 +91,17 @@ public class CivicSip {
         }
     }
 
-    private String makeAuthorizationHeader(String body) throws Exception {
+    HttpClient createHttpClient() {
+        return HttpClientBuilder.create().build();
+    }
+
+    String makeAuthorizationHeader(String body) throws Exception {
         String requestToken = createToken();
         String extToken = createCivicExt(body);
         return String.format("Civic %s.%s", requestToken, extToken);
     }
 
-    private String createToken() throws Exception {
+    String createToken() throws Exception {
 
         long now = System.currentTimeMillis();
         long till = now + 3 * 60000;
@@ -119,7 +123,7 @@ public class CivicSip {
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("alg", "ES256");
-        JwtBuilder builder = Jwts.builder();
+        JwtBuilder builder = createJwtBuilder();
         builder
                 .setHeader(headers)
                 .setPayload(contentNode.toString());
@@ -131,7 +135,11 @@ public class CivicSip {
         return builder.compact();
     }
 
-    private PrivateKey getPrivateKeyFromHex() throws Exception {
+    JwtBuilder createJwtBuilder() {
+        return Jwts.builder();
+    }
+
+    PrivateKey getPrivateKeyFromHex() throws Exception {
         X9ECParameters ecCurve = ECNamedCurveTable.getByName("secp256r1");
         ECParameterSpec ecParameterSpec
                 = new ECNamedCurveSpec("secp256r1", ecCurve.getCurve(), ecCurve.getG(), ecCurve.getN(),
@@ -142,7 +150,7 @@ public class CivicSip {
         return keyFactory.generatePrivate(privateKeySpec);
     }
 
-    private String createCivicExt(String body) {
+    String createCivicExt(String body) {
         try {
             Mac mac = Mac.getInstance("HmacSHA256");
             SecretKeySpec secretKeySpec = new SecretKeySpec(config.getApplicationSecret().getBytes(), "HmacSHA256");
@@ -154,7 +162,7 @@ public class CivicSip {
         }
     }
 
-    private UserData verifyAndDecrypt(ObjectNode payload) throws Exception {
+    UserData verifyAndDecrypt(ObjectNode payload) throws Exception {
         String data = payload.get("data").asText();
         boolean encrypted = payload.get("encrypted").asBoolean();
 
@@ -176,7 +184,7 @@ public class CivicSip {
         return result;
     }
 
-    private String verify(String data) throws Exception {
+    String verify(String data) throws Exception {
         JwtParser parser = Jwts.parser();
         PublicKey pubKey = getPublicKeyFromHexString();
 
@@ -200,7 +208,7 @@ public class CivicSip {
         return factory.generatePublic(publicKeySpec);
     }
 
-    private String decrypt(String encodedData) throws Exception {
+    String decrypt(String encodedData) throws Exception {
         byte[] iv = DatatypeConverter.parseHexBinary(encodedData.substring(0, 32));
         String messagePart = encodedData.substring(32);
         byte[] encodedPart = Base64.decodeBase64(messagePart);
